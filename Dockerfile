@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:edge
 
 ENV VARNISHSRC=/usr/include/varnish VMODDIR=/usr/lib/varnish/vmods
 ADD fmt /usr/bin/fmt
