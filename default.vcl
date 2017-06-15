@@ -46,7 +46,7 @@ sub vcl_recv {
     if ((req.url ~ "^\/__health.*$") || (req.url ~ "^\/__gtg.*$")) {
         set req.http.Host = "aggregate-healthcheck";
         return (pass);
-    } elseif ((req.url ~ "^.*\/__health.*$") || (req.url ~ "^.*\/__gtg.*$")) {
+    } elseif ((req.url ~ "^.*\/__health.*$") || (req.url ~ "^.*\/__gtg.*$")) || (req.url ~ "^.*\/__api.*$")) {
         return (pass);
     } elseif (!req.url ~ "^\/__[\w-]*\/.*$") {
         set req.http.Host = "HOST_HEADER";
