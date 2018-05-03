@@ -45,6 +45,11 @@ backend public_suggestions_api {
   .port = "8080";
 }
 
+backend fake_backend {
+  .host = "some-host-that-does-not-exist";
+  .port = "8080";
+}
+
 acl purge {
     "localhost";
     "10.2.0.0"/16;
@@ -135,6 +140,8 @@ sub vcl_recv {
     } elseif (req.url ~ "\/content\/search.*$") {
         set req.url = regsub(req.url, "^\/content\/(.*)$", "/\1");
         set req.backend_hint = content_search_api_port;
+    } else if (req.url ~ "\/gibberish.*$") {
+        set req.backend_hint = fake_backend;
     }
 
     if (!basicauth.match("/etc/varnish/auth/.htpasswd",  req.http.Authorization)) {
