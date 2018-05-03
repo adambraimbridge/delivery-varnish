@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Values.service.name }}-elb-registrator-job-{{ .Release.Revision}}"
+  name: "{{ .Values.service.name }}-elb-registrator-job-{{ randAlpha 5 | lower}}"
   # This is what defines this resource as a hook. Without this line, the
   # job is considered part of the release.
   annotations:
