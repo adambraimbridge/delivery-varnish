@@ -153,6 +153,10 @@ sub vcl_recv {
             set req.backend_hint = upp_schema_reader;
     }
 
+    if ((req.url ~ "/__health^") {
+        return (pass);
+    }
+
     if (!basicauth.match("/etc/varnish/auth/.htpasswd",  req.http.Authorization)) {
         return(synth(401, "Authentication required"));
     }
