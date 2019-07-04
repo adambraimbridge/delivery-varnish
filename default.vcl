@@ -153,7 +153,7 @@ sub vcl_recv {
             set req.backend_hint = upp_schema_reader;
     }
 
-    if ((req.url ~ "/__health^") {
+    if (req.url ~ "/__health^") {
         return (pass);
     }
 
