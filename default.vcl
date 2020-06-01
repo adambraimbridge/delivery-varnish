@@ -199,6 +199,12 @@ sub vcl_recv {
         } elseif (req.http.Content-Type ~ "^application\/vnd\.ft-upp-content-collection\+json.*$") {
             set req.url = "/validate";
             set req.backend_hint = upp_content_collection_validator;
+        } elseif (req.http.Content-Type ~ "^application\/vnd\.ft-upp-content-placeholder\+json.*$") {
+            set req.url = "/validate";
+            set req.backend_hint = upp_content_placeholder_validator;
+        } elseif (req.http.Content-Type ~ "^application\/vnd\.ft-upp-content-placeholder-internal\+json.*$") {
+            set req.url = "/validate";
+            set req.backend_hint = upp_internal_content_placeholder_validator;
         }
     } elseif (req.url ~ "^\/schemas.*$") {
             set req.backend_hint = upp_schema_reader;
