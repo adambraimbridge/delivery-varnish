@@ -51,6 +51,11 @@ backend internal_apps_routing_varnish {
   .port = "80";
 }
 
+backend ccf_ui {
+  .host = "ccf-ui";
+  .port = "8080";
+}
+
 backend content_search_api_port {
   .host = "content-search-api-port";
   .port = "8080";
@@ -168,6 +173,12 @@ sub vcl_recv {
     if ((req.url ~ "^\/__notifications-push/__health.*$") || (req.url ~ "^\/__notifications-push/__gtg.*$")) {
         set req.url = regsub(req.url, "^\/__[\w-]*\/(.*)$", "/\1");
         set req.backend_hint = content_notifications_push;
+        return (pass);
+    }
+
+    // allow ccf-ui to pass without requiring auth
+    if (req.url ~ "^\/ccf-ui.*$") {
+        set req.backend_hint = ccf_ui;
         return (pass);
     }
 
