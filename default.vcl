@@ -147,6 +147,13 @@ sub vcl_hash {
 }
 
 sub vcl_recv {
+    // Allow ccf-ui to pass without requiring auth.
+    // Should be before the cookie removal because it uses cookies.
+    if (req.url ~ "^\/ccf-ui.*$") {
+        set req.backend_hint = ccf_ui;
+        return (pass);
+    }
+
     # Remove all cookies; we don't need them, and setting cookies bypasses varnish caching.
     unset req.http.Cookie;
 
@@ -173,12 +180,6 @@ sub vcl_recv {
     if ((req.url ~ "^\/__notifications-push/__health.*$") || (req.url ~ "^\/__notifications-push/__gtg.*$")) {
         set req.url = regsub(req.url, "^\/__[\w-]*\/(.*)$", "/\1");
         set req.backend_hint = content_notifications_push;
-        return (pass);
-    }
-
-    // allow ccf-ui to pass without requiring auth
-    if (req.url ~ "^\/ccf-ui.*$") {
-        set req.backend_hint = ccf_ui;
         return (pass);
     }
 
